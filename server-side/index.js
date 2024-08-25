@@ -2,6 +2,7 @@ import express from "express"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 import userRoutes from "./routes/user.js"
+import authRoutes from "./routes/auth.js"
 
 // Load the environment variables into the application
 dotenv.config()
@@ -21,6 +22,8 @@ mongoose
 // Creating an instance of the express application
 const app = express()
 
+app.use(express.json())
+
 // Making the app listen on port 3000 and logging a message to confirm the server is running
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`)
@@ -28,5 +31,6 @@ app.listen(3000, () => {
 
 app.use(`/api/user`, userRoutes)
 
-// Adding a middleware to use the userRoutes for any requests made to '/api/user'
-app.use(`/api/user`, userRoutes) // Routes related to user actions will be handled by userRoutes
+// Adding a middleware
+app.use(`/api/user`, userRoutes)
+app.use(`/api/auth`, authRoutes)
