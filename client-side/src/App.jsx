@@ -10,6 +10,7 @@ import About from "./pages/About"
 import LogIn from "./pages/authPages/Login"
 import Register from "./pages/authPages/Register"
 import Search from "./pages/Search"
+import Projects from "./pages/Projects"
 
 const App = () => {
   const router = createBrowserRouter(
@@ -21,6 +22,8 @@ const App = () => {
           <Route path='/login' element={<LogIn />} />
           <Route path='/register' element={<Register />} />
           <Route path='/search' element={<Search />} />
+
+          <Route path='/projects' element={<Projects />} />
         </Route>
       </>
     )
