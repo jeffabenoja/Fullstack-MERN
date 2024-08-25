@@ -1,26 +1,30 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import express from "express"
+import mongoose from "mongoose"
+import dotenv from "dotenv"
 
 // Load the environment variables into the application
-dotenv.config();
+dotenv.config()
 
 // Connecting to the MongoDB database using the connection string stored in the environment variable
 mongoose
-  .connect(process.env.MONGOOSE_API_KEY)  // The MONGOOSE_API_KEY is fetched from the .env file
+  .connect(process.env.MONGOOSE_API_KEY) // The MONGOOSE_API_KEY is fetched from the .env file
   .then(() => {
     // If the connection is successful, this message will be logged
-    console.log(`Connected to your Database`);
+    console.log(`Connected to your Database`)
   })
   .catch((error) => {
     // If the connection fails, the error is logged
-    console.log(error);
-  });
+    console.log(error)
+  })
 
 // Creating an instance of the express application
-const app = express();
+const app = express()
 
 // Making the app listen on port 3000 and logging a message to confirm the server is running
 app.listen(3000, () => {
-  console.log(`Server is running on port 3000`);
-});
+  console.log(`Server is running on port 3000`)
+})
+
+app.get("/test", (req, res) => {
+  res.json({ message: "API is working" })
+})
