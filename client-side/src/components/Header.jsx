@@ -38,7 +38,13 @@ const Header = () => {
         </Button>
 
         <Link to='/register'>
-          <Button gradientDuoTone='purpleToBlue'>Sign In</Button>
+          <Button
+            gradientDuoTone='purpleToBlue'
+            outline
+            className='focus:ring-2 focus:ring-purple-500 active:ring-2 active:ring-blue-500'
+          >
+            Sign In
+          </Button>
         </Link>
         <Navbar.Toggle />
       </div>
