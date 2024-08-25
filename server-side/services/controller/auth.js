@@ -60,9 +60,6 @@ export const login = async (req, res, next) => {
     // Finding a user in the database with the provided email
     const validUser = await User.findOne({ email })
 
-    // Delete this Soon
-    console.log(json(validUser))
-
     // If no user is found, return a 404 error with a message
     if (!validUser) {
       return next(errorHandler(404, `User not Found`))
