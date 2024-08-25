@@ -1,7 +1,8 @@
 import User from "../../models/user.js"
 import bcryptjs from "bcryptjs"
+import { errorHandler } from "../../utils/error.js"
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
   // Extracting username, email, and password from the request body
   const { username, email, password } = req.body
 
@@ -15,7 +16,7 @@ export const register = async (req, res) => {
     password === ""
   ) {
     // If any field is missing, return a 400 error with a message
-    return res.status(400).json({ message: `All fields are required` })
+    next(errorHandler(400, "All fields are required"))
   }
 
   const encryptPassword = bcryptjs.hashSync(password, 10)
@@ -33,6 +34,6 @@ export const register = async (req, res) => {
     // Sending a response back to the client confirming successful registration
     res.json(`Register Successful`)
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    next(error)
   }
 }

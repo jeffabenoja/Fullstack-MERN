@@ -5,7 +5,7 @@ import userRoutes from "./routes/user.js"
 import authRoutes from "./routes/auth.js"
 
 // Load the environment variables into the application
-dotenv.config()
+dotenv.config() // This loads the environment variables from the .env file into process.env
 
 // Connecting to the MongoDB database using the connection string stored in the environment variable
 mongoose
@@ -22,15 +22,28 @@ mongoose
 // Creating an instance of the express application
 const app = express()
 
+// Middleware to parse incoming JSON requests
 app.use(express.json())
 
-// Making the app listen on port 3000 and logging a message to confirm the server is running
+// Start the server, listening on port 3000, and log a message when it's running
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`)
 })
 
+// Using user routes for handling requests to '/api/user' endpoint
 app.use(`/api/user`, userRoutes)
 
-// Adding a middleware
-app.use(`/api/user`, userRoutes)
+// Using authentication routes for handling requests to '/api/auth' endpoint
 app.use(`/api/auth`, authRoutes)
+
+// Middleware to handle errors. If any route or middleware throws an error, it will be caught here.
+// `err` is the error object, and the middleware will send a structured JSON response with error details.
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500 // Default to 500 if no status code is provided
+  const message = err.message || "Internal Server Error" // Default error message if none is provided
+  res.status(statusCode).json({
+    success: false, // Indicating that the request was not successful
+    statusCode, // Sending back the status code of the error
+    message, // Sending back the error message
+  })
+})
