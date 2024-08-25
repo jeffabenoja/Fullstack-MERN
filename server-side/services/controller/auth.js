@@ -19,16 +19,15 @@ export const register = async (req, res, next) => {
     next(errorHandler(400, "All fields are required"))
   }
 
-  const encryptPassword = bcryptjs.hashSync(password, 10)
-
-  // Creating a new user instance with the provided username, email, and password
-  const newUser = new User({
-    username,
-    email,
-    password: encryptPassword,
-  })
-
   try {
+    const encryptPassword = bcryptjs.hashSync(password, 10)
+
+    // Creating a new user instance with the provided username, email, and password
+    const newUser = new User({
+      username,
+      email,
+      password: encryptPassword,
+    })
     // Saving the new user to the database using the 'save' method
     await newUser.save()
     // Sending a response back to the client confirming successful registration

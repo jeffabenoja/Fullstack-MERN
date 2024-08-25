@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
 
 // Creating a mongoose model named 'User' that will interface with the 'users' collection in MongoDB
 // The model uses the defined 'userSchema' to structure the documents
-const User = mongoose.model("user", userSchema)
+const User = mongoose.model("User", userSchema)
 
 // Exporting the 'User' model so it can be used in other parts of the application
 export default User
