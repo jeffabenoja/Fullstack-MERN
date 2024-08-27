@@ -3,10 +3,12 @@ import userReducer from "./user/userSlice"
 import { persistReducer } from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import { persistStore } from "redux-persist"
+import themeReducer from "./theme/theme"
 
 // Combine all the individual reducers into a single rootReducer
 const rootReducer = combineReducers({
   user: userReducer, // Add the user slice reducer
+  theme: themeReducer, // Add the theme slice reducer
 })
 
 // Configuration object for redux-persist
