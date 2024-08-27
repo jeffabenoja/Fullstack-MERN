@@ -12,6 +12,7 @@ import Register from "./pages/authPages/Register"
 import Search from "./pages/Search"
 import Projects from "./pages/Projects"
 import Board from "./pages/Board"
+import PrivateRoute from "./components/PrivateRoute"
 
 const App = () => {
   const router = createBrowserRouter(
@@ -23,7 +24,10 @@ const App = () => {
           <Route path='/login' element={<LogIn />} />
           <Route path='/register' element={<Register />} />
           <Route path='/search' element={<Search />} />
-          <Route path='/board' element={<Board />} />
+
+          <Route element={<PrivateRoute />}>
+            <Route path='/dashboard' element={<Board />} />
+          </Route>
           <Route path='/projects' element={<Projects />} />
         </Route>
       </>
