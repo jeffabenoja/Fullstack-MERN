@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 import dotenv from "dotenv"
 import userRoutes from "./routes/user.js"
 import authRoutes from "./routes/auth.js"
+import cookieParser from "cookie-parser"
 
 // Load the environment variables into the application
 dotenv.config() // This loads the environment variables from the .env file into process.env
@@ -24,6 +25,9 @@ const app = express()
 
 // Middleware to parse incoming JSON requests
 app.use(express.json())
+
+// Initializing the cookies
+app.use(cookieParser())
 
 // Start the server, listening on port 3000, and log a message when it's running
 app.listen(3000, () => {
