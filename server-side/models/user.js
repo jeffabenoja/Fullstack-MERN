@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-
     password: {
       type: String,
       required: true,
@@ -25,6 +24,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false
     },
   },
   // This option automatically adds 'createdAt' and 'updatedAt' fields to the schema
