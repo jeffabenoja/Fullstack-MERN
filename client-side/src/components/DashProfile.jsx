@@ -8,10 +8,6 @@ import {
   updateFailure,
   updateStart,
   updateSuccess,
-  deleteFailure,
-  deleteStart,
-  deleteSuccess,
-  signOutSuccess
 } from "../redux/user/userSlice"
 import { app } from "../firebase/firebase"
 import { useState, useRef, useEffect } from "react"
@@ -20,14 +16,13 @@ import { useSelector, useDispatch } from "react-redux"
 import { HiOutlineExclamationCircle } from "react-icons/hi"
 import { CircularProgressbar } from "react-circular-progressbar"
 import { Alert, Button, Modal, TextInput } from "flowbite-react"
+import { useAuth } from "../context/authContext"
 
 const DashProfile = () => {
   const { currentUser, error } = useSelector((state) => state.user)
   const fileRef = useRef()
-  const dispatch = useDispatch()
   const [formData, setFormData] = useState({})
   const [imageFile, setImageFile] = useState(null)
-  const [showModal, setShowModal] = useState(false)
   const [imageFileUrl, setImageFileUrl] = useState(null)
   const [updateUserError, setUpdateUserError] = useState(null)
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null)
@@ -35,6 +30,8 @@ const DashProfile = () => {
   const [imageFileUploadError, setImageFileUploadError] = useState(null)
   const [imageFileUploadingProgress, setImageFileUploadingProgress] =
     useState(null)
+  const { signOutUser, showModal, setShowModal, deleteUser, updateUser } =
+    useAuth()
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
@@ -107,64 +104,15 @@ const DashProfile = () => {
       return
     }
 
-    try {
-      dispatch(updateStart())
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
-      const data = await res.json()
-
-      if (!res.ok) {
-        dispatch(updateFailure(data.message))
-        setUpdateUserError(data.message)
-      } else {
-        dispatch(updateSuccess(data))
-        setUpdateUserSuccess("User profile updated successfully")
-      }
-    } catch (error) {
-      dispatch(updateFailure(error.message))
-      setUpdateUserError(error.message)
-    }
+    updateUser(formData, currentUser._id, setUpdateUserSuccess)
   }
 
   const handleDeleteUser = async () => {
-    setShowModal(false)
-    try {
-      dispatch(deleteStart())
-
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: "DELETE",
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        dispatch(deleteFailure(data.message))
-      } else {
-        dispatch(deleteSuccess())
-      }
-    } catch (error) {
-      dispatch(deleteFailure(error.message))
-    }
+    deleteUser(currentUser._id)
   }
 
-  const handleSignOut = async () => {
-    try {
-      const res = await fetch("/api/user/signout", {
-        method:'POST'
-      })
-      const data = await res.json()
-      if(!res.ok) {
-        console.log(data.message)
-      } else {
-        dispatch(signOutSuccess())
-      }
-
-    } catch (error) {
-      console.log(error)
-    }
+  const handleSignOut = () => {
+    signOutUser()
   }
 
   return (

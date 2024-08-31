@@ -2,8 +2,11 @@ import { Link, useNavigate } from "react-router-dom"
 import { Label, TextInput, Button, Alert, Spinner } from "flowbite-react"
 import { useState } from "react"
 import OAuth from "../../components/OAuth"
+import { useAuth } from "../../context/authContext"
 
 const Register = () => {
+  const { registerUser } = useAuth()
+
   const [formData, setFormData] = useState({})
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -14,34 +17,43 @@ const Register = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
   }
 
-  const handleSubmit = async (e) => {
+  // This is async function as your references
+  const handleSubmit = (e) => {
     e.preventDefault()
 
     if (!formData.username || !formData.email || !formData.password) {
       return setError(`Please fill out all fields!`)
     }
 
-    try {
-      setLoading(true)
-      setError(null)
-      const res = await fetch(`/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
+    registerUser(formData, setError, setLoading, navigate)
 
-      const data = await res.json()
-      if (data.success === false) {
-        return setError(data.message)
-      }
-      setLoading(false)
-      if (res.ok) {
-        navigate("/login")
-      }
-    } catch (error) {
-      setError(error.message)
-      setLoading(false)
-    }
+    setFormData({})
+
+    // if (!formData.username || !formData.email || !formData.password) {
+    //   return setError(`Please fill out all fields!`)
+    // }
+
+    // try {
+    //   setLoading(true)
+    //   setError(null)
+    //   const res = await fetch(`/api/auth/register`, {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(formData),
+    //   })
+
+    //   const data = await res.json()
+    //   if (data.success === false) {
+    //     return setError(data.message)
+    //   }
+    //   setLoading(false)
+    //   if (res.ok) {
+    //     navigate("/login")
+    //   }
+    // } catch (error) {
+    //   setError(error.message)
+    //   setLoading(false)
+    // }
   }
 
   return (
