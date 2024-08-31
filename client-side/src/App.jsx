@@ -13,6 +13,8 @@ import Search from "./pages/Search"
 import Projects from "./pages/Projects"
 import Board from "./pages/Board"
 import PrivateRoute from "./components/PrivateRoute"
+import AdminPrivateRoute from "./components/AdminPrivateRoute"
+import CreatePost from "./pages/CreatePost"
 
 const App = () => {
   const router = createBrowserRouter(
@@ -27,6 +29,9 @@ const App = () => {
 
           <Route element={<PrivateRoute />}>
             <Route path='/dashboard' element={<Board />} />
+          </Route>
+          <Route element={<AdminPrivateRoute />}>
+            <Route path='/create-post' element={<CreatePost />} />
           </Route>
           <Route path='/projects' element={<Projects />} />
         </Route>

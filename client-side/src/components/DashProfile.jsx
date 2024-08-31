@@ -4,22 +4,19 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage"
-import {
-  updateFailure,
-  updateStart,
-  updateSuccess,
-} from "../redux/user/userSlice"
+
+import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
 import { app } from "../firebase/firebase"
 import { useState, useRef, useEffect } from "react"
 import "react-circular-progressbar/dist/styles.css"
-import { useSelector, useDispatch } from "react-redux"
 import { HiOutlineExclamationCircle } from "react-icons/hi"
 import { CircularProgressbar } from "react-circular-progressbar"
 import { Alert, Button, Modal, TextInput } from "flowbite-react"
 import { useAuth } from "../context/authContext"
 
 const DashProfile = () => {
-  const { currentUser, error } = useSelector((state) => state.user)
+  const { currentUser, error, loading } = useSelector((state) => state.user)
   const fileRef = useRef()
   const [formData, setFormData] = useState({})
   const [imageFile, setImageFile] = useState(null)
@@ -187,9 +184,25 @@ const DashProfile = () => {
           placeholder='password'
           onChange={handleChange}
         />
-        <Button type='submit' gradientDuoTone='purpleToBlue' outline>
-          Update Profile
+        <Button
+          type='submit'
+          gradientDuoTone='purpleToBlue'
+          outline
+          disabled={loading || imageFileUploading}
+        >
+          {loading ? "Loading..." : "Update Profile"}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"}>
+            <Button
+              type='button'
+              gradientDuoTone='purpleToPink'
+              className='w-full'
+            >
+              Create a post
+            </Button>
+          </Link>
+        )}
       </form>
       <div className='text-red-500 flex justify-between mt-5'>
         <span onClick={() => setShowModal(true)} className='cursor-pointer'>
