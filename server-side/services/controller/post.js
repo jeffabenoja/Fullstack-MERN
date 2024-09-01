@@ -26,6 +26,9 @@ export const post = async (req, res, next) => {
     const savePost = await newPost.save()
     res.status(201).json(savePost)
   } catch (error) {
+    if (error.code === 11000) {
+      return next(errorHandler(400, "This title topic already posted"))
+    }
     next(error)
   }
 }

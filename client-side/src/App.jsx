@@ -12,8 +12,8 @@ import Register from "./pages/authPages/Register"
 import Search from "./pages/Search"
 import Projects from "./pages/Projects"
 import Board from "./pages/Board"
-import PrivateRoute from "./components/PrivateRoute"
-import AdminPrivateRoute from "./components/AdminPrivateRoute"
+import PrivateRoute from "./components/route/PrivateRoute"
+import AdminPrivateRoute from "./components/route/AdminPrivateRoute"
 import CreatePost from "./pages/CreatePost"
 
 const App = () => {
@@ -23,6 +23,7 @@ const App = () => {
         <Route path='/' element={<MainLayout />}>
           <Route path='' element={<Home />} />
           <Route path='about' element={<About />} />
+          <Route path='projects' element={<Projects />} />
           <Route path='/login' element={<LogIn />} />
           <Route path='/register' element={<Register />} />
           <Route path='/search' element={<Search />} />
@@ -31,9 +32,8 @@ const App = () => {
             <Route path='/dashboard' element={<Board />} />
           </Route>
           <Route element={<AdminPrivateRoute />}>
-            <Route path='/create-post' element={<CreatePost />} />
+            <Route path='/post/create-post' element={<CreatePost />} />
           </Route>
-          <Route path='/projects' element={<Projects />} />
         </Route>
       </>
     )

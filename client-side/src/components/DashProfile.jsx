@@ -193,7 +193,7 @@ const DashProfile = () => {
           {loading ? "Loading..." : "Update Profile"}
         </Button>
         {currentUser.isAdmin && (
-          <Link to={"/create-post"}>
+          <Link to={"/post/create-post"}>
             <Button
               type='button'
               gradientDuoTone='purpleToPink'

@@ -13,11 +13,11 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <PersistGate persistor={persistor}>
       <Provider store={store}>
-        <ThemeProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <ThemeProvider>
             <App />
-          </AuthProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </Provider>
     </PersistGate>
   </StrictMode>
