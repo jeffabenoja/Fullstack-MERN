@@ -18,11 +18,10 @@ const UpdatePost = () => {
     publishError,
     sendPostAPI,
   } = usePost()
-  const { currentUser } = useSelector((state) => state.user)
+  const navigate = useNavigate()
   const { postId } = useParams()
   const [formData, setFormData] = useState({})
-
-  const navigate = useNavigate()
+  const { currentUser } = useSelector((state) => state.user)
 
   useEffect(() => {
     try {

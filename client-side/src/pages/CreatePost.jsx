@@ -16,9 +16,8 @@ const CreatePost = () => {
     publishError,
     sendPostAPI,
   } = usePost()
-  const [formData, setFormData] = useState({})
-
   const navigate = useNavigate()
+  const [formData, setFormData] = useState({})
 
   const handleUploadImage = () => {
     uploadImage(formData, setFormData)
