@@ -6,18 +6,15 @@ import "flowbite/dist/flowbite.min.css"
 import { store, persistor } from "./redux/store.js"
 import { Provider } from "react-redux"
 import { PersistGate } from "redux-persist/integration/react"
-import ThemeProvider from "./components/ThemeProvider.jsx"
-import { AuthProvider } from "./context/authContext.jsx"
+import ContextProvider from "./context/provider/ContextProvider.jsx"
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <PersistGate persistor={persistor}>
       <Provider store={store}>
-        <AuthProvider>
-          <ThemeProvider>
-            <App />
-          </ThemeProvider>
-        </AuthProvider>
+        <ContextProvider>
+          <App />
+        </ContextProvider>
       </Provider>
     </PersistGate>
   </StrictMode>
