@@ -1,12 +1,23 @@
 import { Table } from "flowbite-react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { usePost } from "../context/PostContext"
+import { HiOutlineExclamationCircle } from "react-icons/hi"
+import CustomModal from "./CustomModal"
 
 const DashPosts = () => {
   const { currentUser } = useSelector((state) => state.user)
-  const { showMore, userPost, fetchPost, showMorePost } = usePost()
+  const {
+    showMore,
+    userPost,
+    fetchPost,
+    showMorePost,
+    showModal,
+    setShowModal,
+    setPostIdToDelete,
+    deletePost,
+  } = usePost()
 
   useEffect(() => {
     if (currentUser?.isAdmin) {
@@ -18,6 +29,10 @@ const DashPosts = () => {
     const startIndex = userPost.length
 
     showMorePost(currentUser._id, startIndex)
+  }
+
+  const handleDeletePost = () => {
+    deletePost(currentUser._id)
   }
 
   return (
@@ -62,7 +77,13 @@ const DashPosts = () => {
                     {post.category}
                   </Table.Cell>
                   <Table.Cell>
-                    <span className='font-medium text-red-500 hover:underline cursor-pointer'>
+                    <span
+                      className='font-medium text-red-500 hover:underline cursor-pointer'
+                      onClick={() => {
+                        setShowModal(true)
+                        setPostIdToDelete(post._id)
+                      }}
+                    >
                       Delete
                     </span>
                   </Table.Cell>
@@ -90,6 +111,18 @@ const DashPosts = () => {
       ) : (
         <p>You have no post yet</p>
       )}
+      <CustomModal
+        showModal={showModal}
+        onClose={() => setShowModal(false)}
+        icon={
+          <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+        }
+        title='Are you sure you want to delete this post?'
+        description='This action cannot be undone and the post will be permanently removed.'
+        confirmText='Yes, delete post'
+        cancelText='No, cancel'
+        onClick={handleDeletePost}
+      />
     </div>
   )
 }
