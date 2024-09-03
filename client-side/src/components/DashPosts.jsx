@@ -21,7 +21,7 @@ const DashPosts = () => {
 
   useEffect(() => {
     if (currentUser?.isAdmin) {
-      fetchPost(currentUser._id)
+      fetchPost(`/api/post/getposts?userId=${currentUser._id}`)
     }
   }, [currentUser._id])
 
@@ -59,7 +59,7 @@ const DashPosts = () => {
                   <Table.Cell>
                     <Link to={`/post/${post.slug}`}>
                       <img
-                        src={post.img}
+                        src={post.image}
                         alt={post.title}
                         className='w-20 h-10 object-cover bg-gray-500'
                       />
@@ -90,7 +90,7 @@ const DashPosts = () => {
                   <Table.Cell>
                     <Link
                       className='text-teal-500 hover:underline'
-                      to={`/update-post/${post._id}`}
+                      to={`/post/update-post/${post._id}`}
                     >
                       <span>Edit</span>
                     </Link>

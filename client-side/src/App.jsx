@@ -15,6 +15,7 @@ import Board from "./pages/Board"
 import PrivateRoute from "./components/route/PrivateRoute"
 import AdminPrivateRoute from "./components/route/AdminPrivateRoute"
 import CreatePost from "./pages/CreatePost"
+import UpdatePost from "./pages/UpdatePost"
 
 const App = () => {
   const router = createBrowserRouter(
@@ -33,6 +34,7 @@ const App = () => {
           </Route>
           <Route element={<AdminPrivateRoute />}>
             <Route path='/post/create-post' element={<CreatePost />} />
+            <Route path='/post/update-post/:postId' element={<UpdatePost />} />
           </Route>
         </Route>
       </>

@@ -1,14 +1,16 @@
-import { useState } from "react"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
-import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { useEffect, useState } from "react"
 import { usePost } from "../context/PostContext"
 import "react-circular-progressbar/dist/styles.css"
+import { useNavigate, useParams } from "react-router-dom"
 import { CircularProgressbar } from "react-circular-progressbar"
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react"
 
-const CreatePost = () => {
+const UpdatePost = () => {
   const {
+    fetchPost,
     uploadImage,
     imageFileUploadError,
     imageFileUploadingProgress,
@@ -16,9 +18,19 @@ const CreatePost = () => {
     publishError,
     sendPostAPI,
   } = usePost()
+  const { currentUser } = useSelector((state) => state.user)
+  const { postId } = useParams()
   const [formData, setFormData] = useState({})
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    try {
+      fetchPost(`/api/post/getposts?postId=${postId}`, setFormData)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [postId])
 
   const handleUploadImage = () => {
     uploadImage(formData, setFormData)
@@ -26,12 +38,17 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    sendPostAPI("/api/post/create", "POST", formData, navigate)
+    sendPostAPI(
+      `/api/post/updatepost/${formData._id}/${currentUser._id}`,
+      "PUT",
+      formData,
+      navigate
+    )
   }
 
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
-      <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
+      <h1 className='text-center text-3xl my-7 font-semibold'>Update a post</h1>
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <div className='flex flex-col gap-4 md:flex-row justify-between'>
           <TextInput
@@ -43,11 +60,13 @@ const CreatePost = () => {
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
+            value={formData.title}
           />
           <Select
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
             }
+            value={formData.category}
           >
             <option value='uncategorized'>Select Category</option>
             <option value='javaScript'>JavaScript</option>
@@ -94,13 +113,14 @@ const CreatePost = () => {
         )}
         <ReactQuill
           theme='snow'
+          value={formData.content}
           placeholder="What's on your mind?"
           className='h-72 mb-12'
           required
           onChange={(value) => setFormData({ ...formData, content: value })}
         />
         <Button type='submit' gradientDuoTone='purpleToPink'>
-          Publish
+          Update post
         </Button>
         {publishError && (
           <Alert className='mt-5' color='failure'>
@@ -112,4 +132,4 @@ const CreatePost = () => {
   )
 }
 
-export default CreatePost
+export default UpdatePost
