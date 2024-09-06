@@ -8,7 +8,7 @@ import {
   BsDribbble,
 } from "react-icons/bs"
 
-const CustomFooter = () => {
+const Footer = () => {
   return (
     <FlowbiteFooter container className='border border-t-8 border-teal-500 '>
       <div className='w-full max-w-7xl mx-auto'>
@@ -99,4 +99,4 @@ const CustomFooter = () => {
   )
 }
 
-export default CustomFooter
+export default Footer

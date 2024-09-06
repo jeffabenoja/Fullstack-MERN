@@ -2,22 +2,23 @@ import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
-import { usePost } from "../context/PostContext"
 import "react-circular-progressbar/dist/styles.css"
 import { useNavigate, useParams } from "react-router-dom"
 import { CircularProgressbar } from "react-circular-progressbar"
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react"
+import usePost from "../hooks/usePost"
+import useUpload from "../hooks/useUpload"
+import { useData } from "../context/AppDataContext"
 
 const UpdatePost = () => {
   const {
-    fetchPost,
     uploadImage,
     imageFileUploadError,
     imageFileUploadingProgress,
     setFile,
-    publishError,
-    sendPostAPI,
-  } = usePost()
+  } = useUpload()
+  const { fetchData } = useData()
+  const { publishError, fetchPost } = usePost()
   const navigate = useNavigate()
   const { postId } = useParams()
   const [formData, setFormData] = useState({})
@@ -25,7 +26,7 @@ const UpdatePost = () => {
 
   useEffect(() => {
     try {
-      fetchPost(`/api/post/getposts?postId=${postId}`, setFormData)
+      fetchData(`/api/post/getposts?postId=${postId}`, setFormData)
     } catch (error) {
       console.log(error)
     }
@@ -37,7 +38,7 @@ const UpdatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    sendPostAPI(
+    fetchPost(
       `/api/post/updatepost/${formData._id}/${currentUser._id}`,
       "PUT",
       formData,

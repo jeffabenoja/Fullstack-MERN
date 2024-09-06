@@ -1,5 +1,5 @@
 import { Sidebar } from "flowbite-react"
-import { HiArrowSmRight, HiDocumentText, HiUser } from "react-icons/hi"
+import { HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiUser } from "react-icons/hi"
 import { useLocation, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { useAuth } from "../context/authContext"
@@ -41,16 +41,28 @@ const DashSidebar = () => {
             </Sidebar.Item>
           </Link>
           {currentUser?.isAdmin && (
-            <Link to={"/dashboard?tab=posts"}>
-              <Sidebar.Item
-                active={tab === "posts"}
-                icon={HiDocumentText}
-                className='cursor-pointer'
-                as='div'
-              >
-                Post
-              </Sidebar.Item>
-            </Link>
+            <>
+              <Link to={"/dashboard?tab=posts"}>
+                <Sidebar.Item
+                  active={tab === "posts"}
+                  icon={HiDocumentText}
+                  className='cursor-pointer'
+                  as='div'
+                >
+                  Post
+                </Sidebar.Item>
+              </Link>
+              <Link to={"/dashboard?tab=users"}>
+                <Sidebar.Item
+                  active={tab === "users"}
+                  icon={HiOutlineUserGroup}
+                  className='cursor-pointer'
+                  as='div'
+                >
+                  Users
+                </Sidebar.Item>
+              </Link>
+            </>
           )}
           <Sidebar.Item
             icon={HiArrowSmRight}

@@ -1,13 +1,13 @@
 import ThemeProvider from "./ThemeProvider"
 import { AuthProvider } from "../authContext"
-import { PostProvider } from "../PostContext"
+import { AppDataProvider } from "../AppDataContext"
 
 const ContextProvider = ({ children }) => {
   return (
     <AuthProvider>
-      <PostProvider>
+      <AppDataProvider>
         <ThemeProvider>{children}</ThemeProvider>
-      </PostProvider>
+      </AppDataProvider>
     </AuthProvider>
   )
 }

@@ -4,7 +4,6 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage"
-
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { app } from "../firebase/firebase"
@@ -30,6 +29,7 @@ const DashProfile = () => {
     useState(null)
   const { signOutUser, showModal, setShowModal, deleteUser, updateUser } =
     useAuth()
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
