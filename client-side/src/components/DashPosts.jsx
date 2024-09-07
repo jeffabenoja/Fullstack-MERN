@@ -8,7 +8,7 @@ import CustomModal from "./CustomModal"
 
 const DashPosts = () => {
   const { currentUser } = useSelector((state) => state.user)
-  const [IdToDelete, setIdToDelete] = useState(null)
+  const [idToDelete, setIdToDelete] = useState(null)
   const {
     showMorePosts,
     data,
@@ -36,8 +36,8 @@ const DashPosts = () => {
 
   const handleDeletePost = () => {
     deleteData(
-      `/api/post/deleteposts/${IdToDelete}/${currentUser._id}`,
-      IdToDelete
+      `/api/post/deleteposts/${idToDelete}/${currentUser._id}`,
+      idToDelete
     )
   }
 

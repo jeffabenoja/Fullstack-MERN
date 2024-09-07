@@ -12,7 +12,7 @@ import "react-circular-progressbar/dist/styles.css"
 import { HiOutlineExclamationCircle } from "react-icons/hi"
 import { CircularProgressbar } from "react-circular-progressbar"
 import { Alert, Button, TextInput } from "flowbite-react"
-import { useAuth } from "../context/authContext"
+import { useAuth } from "../context/AuthContext"
 import CustomModal from "./CustomModal"
 
 const DashProfile = () => {
@@ -29,7 +29,6 @@ const DashProfile = () => {
     useState(null)
   const { signOutUser, showModal, setShowModal, deleteUser, updateUser } =
     useAuth()
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]

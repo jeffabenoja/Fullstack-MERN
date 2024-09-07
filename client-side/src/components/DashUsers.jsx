@@ -17,7 +17,7 @@ const DashUsers = () => {
     setShowModal,
   } = useData()
   const { currentUser } = useSelector((state) => state.user)
-  const [IdToDelete, setIdToDelete] = useState(null)
+  const [idToDelete, setIdToDelete] = useState(null)
 
   useEffect(() => {
     if (currentUser?.isAdmin) {
@@ -32,7 +32,7 @@ const DashUsers = () => {
   }
 
   const handleDeleteUser = () => {
-    deleteData(`/api/user/deleteuser/`, currentUser._id)
+    deleteData(`/api/user/delete/${idToDelete}`, idToDelete)
   }
 
   return (
