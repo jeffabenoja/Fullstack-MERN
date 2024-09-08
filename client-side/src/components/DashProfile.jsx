@@ -12,7 +12,7 @@ import "react-circular-progressbar/dist/styles.css"
 import { HiOutlineExclamationCircle } from "react-icons/hi"
 import { CircularProgressbar } from "react-circular-progressbar"
 import { Alert, Button, TextInput } from "flowbite-react"
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "../context/authContext"
 import CustomModal from "./CustomModal"
 
 const DashProfile = () => {

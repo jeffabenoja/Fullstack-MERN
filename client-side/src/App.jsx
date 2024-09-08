@@ -16,19 +16,23 @@ import PrivateRoute from "./components/route/PrivateRoute"
 import AdminPrivateRoute from "./components/route/AdminPrivateRoute"
 import CreatePost from "./pages/CreatePost"
 import UpdatePost from "./pages/UpdatePost"
+import PostPage from "./pages/PostPage"
 
 const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
         <Route path='/' element={<MainLayout />}>
+          {/* Public Route */}
           <Route path='' element={<Home />} />
           <Route path='about' element={<About />} />
           <Route path='projects' element={<Projects />} />
           <Route path='/login' element={<LogIn />} />
           <Route path='/register' element={<Register />} />
           <Route path='/search' element={<Search />} />
+          <Route path='/post/:postSlug' element={<PostPage />} />
 
+          {/* Private Route */}
           <Route element={<PrivateRoute />}>
             <Route path='/dashboard' element={<Board />} />
           </Route>

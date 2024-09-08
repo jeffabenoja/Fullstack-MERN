@@ -21,7 +21,7 @@ const DashUsers = () => {
 
   useEffect(() => {
     if (currentUser?.isAdmin) {
-      fetchData(`/api/user/getusers`)
+      fetchData(`/api/user/getusers`,null,false)
     }
   }, [currentUser._id])
 

@@ -33,7 +33,7 @@ const Header = () => {
         <TextInput
           type='text'
           placeholder='Search...'
-          inputClassName='border-white'
+          className='border-white'
         />
         <AiOutlineSearch className='absolute top-1/4 right-2.5 text-gray-500 text-lg' />
       </form>

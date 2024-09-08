@@ -11,31 +11,41 @@ export const AppDataProvider = ({ children }) => {
   const [showMorePosts, setShowMorePosts] = useState(true)
   const [showMoreUsers, setShowMoreUsers] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-  const fetchData = async (url, setFormData) => {
+  const fetchData = async (url, setFormData = null, isPost = true) => {
     try {
       const res = await fetch(url)
       const data = await res.json()
 
-      // Handle the case where the response is not successful
       if (!res.ok) {
+        setError(true)
+        setLoading(false)
         console.log(data.message)
         return
       }
 
-      // Handle the case where formData is not provided
-      if (!setFormData) {
-        setData(data.posts || data.users)
-
-        // Check if there are fewer than 9 posts to decide whether to show more
-        if (data?.posts?.length < 9 || data?.user?.length < 9) {
-          setShowMore(false)
-        }
+      // If setFormData is provided, it will populate the form data with the fetched data
+      if (setFormData) {
+        setFormData(isPost ? data.posts[0] : data.users[0])
+        setLoading(false)
+        setError(false)
       } else {
-        // Handle the case where formData is provided
-        setFormData(data.posts[0])
+        // Set data based on whether it's a post or a user
+        setData(isPost ? data.posts : data.users)
+        setLoading(false)
+        setError(false)
+        // Show/Hide "Show More" based on the length of the fetched data
+        if (isPost && data.posts.length < 9) {
+          setShowMorePosts(false)
+        } else if (!isPost && data.users.length < 9) {
+          setShowMoreUsers(false)
+        }
       }
     } catch (error) {
+      setError(true)
+      setLoading(false)
       console.log(error)
     }
   }
@@ -92,6 +102,8 @@ export const AppDataProvider = ({ children }) => {
     showModal,
     setShowModal,
     deleteData,
+    error,
+    loading,
   }
 
   return (
