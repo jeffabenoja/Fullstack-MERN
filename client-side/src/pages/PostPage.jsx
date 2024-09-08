@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useData } from "../context/AppDataContext"
 import { Button, Spinner } from "flowbite-react"
+import CallToAction from "../components/callToAction"
 
 const PostPage = () => {
   const { fetchData, error, loading } = useData()
@@ -48,6 +49,9 @@ const PostPage = () => {
         className='p-3 max-w-2xl mx-auto w-full content'
         dangerouslySetInnerHTML={{ __html: formData && formData.content }}
       ></div>
+      <div className='max-w-4xl mx-auto w-full'>
+        <CallToAction />
+      </div>
     </main>
   )
 }
