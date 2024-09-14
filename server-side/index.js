@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import userRoutes from "./routes/user.js"
 import authRoutes from "./routes/auth.js"
 import postRoute from "./routes/post.js"
+import commentRoute from "./routes/comment.js"
 import cookieParser from "cookie-parser"
 
 // Load the environment variables into the application
@@ -41,8 +42,12 @@ app.use(`/api/user`, userRoutes)
 // Using authentication routes for handling requests to '/api/auth' endpoint
 app.use(`/api/auth`, authRoutes)
 
-// Using post routes to for handling requests to '/api/post' endpoint
+// Using post routes for handling requests to '/api/post' endpoint
 app.use("/api/post", postRoute)
+
+// Using comment route for handling request to '/api/comment' endpoint
+app.use('/api/comment', commentRoute)
+
 
 // Middleware to handle errors. If any route or middleware throws an error, it will be caught here.
 // `err` is the error object, and the middleware will send a structured JSON response with error details.

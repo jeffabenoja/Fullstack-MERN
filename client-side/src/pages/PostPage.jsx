@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { useData } from "../context/AppDataContext"
 import { Button, Spinner } from "flowbite-react"
 import CallToAction from "../components/callToAction"
+import CommentSection from "../components/CommentSection"
 
 const PostPage = () => {
   const { fetchData, error, loading } = useData()
@@ -52,6 +53,7 @@ const PostPage = () => {
       <div className='max-w-4xl mx-auto w-full'>
         <CallToAction />
       </div>
+      <CommentSection postId={formData._id} />
     </main>
   )
 }

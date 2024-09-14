@@ -3,7 +3,7 @@ import { useState } from "react"
 const usePost = () => {
   const [publishError, setPublishError] = useState(null)
 
-  const fetchPost = async (url, fetchMethod, formData, navigate) => {
+  const sendPost = async (url, fetchMethod, formData, navigate) => {
     try {
       const res = await fetch(url, {
         method: fetchMethod,
@@ -27,7 +27,7 @@ const usePost = () => {
     }
   }
 
-  return { publishError, fetchPost }
+  return { publishError, sendPost }
 }
 
 export default usePost

@@ -17,6 +17,7 @@ import AdminPrivateRoute from "./components/route/AdminPrivateRoute"
 import CreatePost from "./pages/CreatePost"
 import UpdatePost from "./pages/UpdatePost"
 import PostPage from "./pages/PostPage"
+import ScrollToTop from "./components/ScrollToTop"
 
 const App = () => {
   const router = createBrowserRouter(

@@ -18,7 +18,7 @@ const UpdatePost = () => {
     setFile,
   } = useUpload()
   const { fetchData } = useData()
-  const { publishError, fetchPost } = usePost()
+  const { publishError, sendPost } = usePost()
   const navigate = useNavigate()
   const { postId } = useParams()
 
@@ -41,7 +41,7 @@ const UpdatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    fetchPost(
+    sendPost(
       `/api/post/updatepost/${formData._id}/${currentUser._id}`,
       "PUT",
       formData,

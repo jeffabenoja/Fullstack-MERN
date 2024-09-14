@@ -15,7 +15,7 @@ const CreatePost = () => {
     imageFileUploadingProgress,
     setFile,
   } = useUpload()
-  const { publishError, fetchPost } = usePost()
+  const { publishError, sendPost } = usePost()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({})
 
@@ -25,7 +25,7 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    fetchPost("/api/post/create", "POST", formData, navigate)
+    sendPost("/api/post/create", "POST", formData, navigate)
   }
 
   return (
