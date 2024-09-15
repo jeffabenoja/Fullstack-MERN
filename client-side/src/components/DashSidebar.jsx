@@ -1,5 +1,10 @@
 import { Sidebar } from "flowbite-react"
-import { HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiUser } from "react-icons/hi"
+import {
+  HiArrowSmRight,
+  HiDocumentText,
+  HiOutlineUserGroup,
+  HiUser,
+} from "react-icons/hi"
 import { useLocation, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { useAuth } from "../context/authContext"
@@ -9,16 +14,9 @@ const DashSidebar = () => {
   const { currentUser } = useSelector((state) => state.user)
 
   const { signOutUser } = useAuth()
-  const location = useLocation()
-  const [tab, setTab] = useState("")
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search)
-    const tabFromUrl = urlParams.get("tab")
-    if (tabFromUrl) {
-      setTab(tabFromUrl)
-    }
-  }, [location.search])
+  // Use the custom hook to get the current tab
+  const tab = useTabFromUrlParams()
 
   const handleSignOut = () => {
     signOutUser()
@@ -78,3 +76,19 @@ const DashSidebar = () => {
 }
 
 export default DashSidebar
+
+// Custom hook to get tab from URL
+export const useTabFromUrlParams = () => {
+  const [currentTab, setCurrentTab] = useState("")
+  const { search } = useLocation()
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(search)
+    const tabFromUrlParams = urlParams.get("tab")
+    if (tabFromUrlParams) {
+      setCurrentTab(tabFromUrlParams)
+    }
+  }, [search])
+
+  return currentTab
+}
