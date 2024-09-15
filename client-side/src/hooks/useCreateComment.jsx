@@ -1,9 +1,10 @@
 import { useState } from "react"
 
-export const useCreateComment = () => {
+export const useCreateComment = (onSuccess) => {
   const [commentError, setCommentError] = useState(null)
+  // const [isEditing, setIsEditing] = useState(false)
 
-  const createComment = async (comment, postId, userId, setComments) => {
+  const createComment = async (comment, postId, userId) => {
     try {
       const res = await fetch("/api/comment/create", {
         method: "POST",
@@ -21,7 +22,7 @@ export const useCreateComment = () => {
 
       if (res.ok) {
         setCommentError(null)
-        setComments((prevComments) => [data, ...prevComments])
+        onSuccess()
       } else {
         setCommentError("Error creating comment")
       }
@@ -29,6 +30,25 @@ export const useCreateComment = () => {
       setCommentError(error.message)
     }
   }
+
+  // const updateComment = async (comment, editedContent) => {
+  //   try {
+  //     const res = await fetch(`/api/comment/editComment/${comment._id}`, {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ content: editedContent }),
+  //     })
+
+  //     if (res.ok) {
+  //       setIsEditing(false)
+  //       onEdit(comment, editedContent)
+  //     }
+  //   } catch (error) {
+  //     setCommentError(error.message)
+  //   }
+  // }
 
   return { createComment, commentError }
 }

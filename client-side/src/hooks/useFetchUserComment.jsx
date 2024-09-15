@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react"
 
-export const useFetchUserComment = (userId) => {
+export const useFetchUserComment = (comment) => {
   const [user, setUser] = useState({})
   const [error, setError] = useState(null)
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch(`/api/user/${userId}`)
+        const res = await fetch(`/api/user/${comment.userId}`)
         const data = await res.json()
 
         if (res.ok) {
@@ -20,10 +20,10 @@ export const useFetchUserComment = (userId) => {
       }
     }
 
-    if (userId) {
+    if (comment.userId) {
       getUser()
     }
-  }, [userId])
+  }, [comment])
 
   return { user, error }
 }

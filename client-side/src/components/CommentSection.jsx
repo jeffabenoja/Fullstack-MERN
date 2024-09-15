@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom"
 import Comment from "./Comment"
 import { useCreateComment } from "../hooks/useCreateComment"
 import { useFetchComments } from "../hooks/useFetchComments"
-import { useLikeComment } from "../hooks/useLikeComment"
 
 const CommentSection = ({ postId }) => {
   const { currentUser } = useSelector((state) => state.user)
@@ -13,15 +12,23 @@ const CommentSection = ({ postId }) => {
   const navigate = useNavigate()
 
   // Custom hooks
-  const { comments, setComments, error } = useFetchComments(postId)
-  const { createComment, commentError } = useCreateComment()
-  const { likeComment } = useLikeComment()
+  const { comments, setComments, error, likeComment, refetch } =
+    useFetchComments(postId)
+  const { createComment, commentError } = useCreateComment(refetch)
+
+  const handleEdit = async (comment, editedContent) => {
+    setComments(
+      comments.map((c) =>
+        c._id === comment._id ? { ...c, content: editedContent } : c
+      )
+    )
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     if (comment.length <= 200) {
-      createComment(comment, postId, currentUser._id, setComments)
+      createComment(comment, postId, currentUser._id)
       setComment("")
     }
   }
@@ -94,15 +101,9 @@ const CommentSection = ({ postId }) => {
             <Comment
               key={comment._id}
               comment={comment}
-              onLike={() =>
-                likeComment(
-                  comment._id,
-                  currentUser,
-                  comments,
-                  setComments,
-                  navigate
-                )
-              }
+              onLike={() => likeComment(comment._id, currentUser, navigate)}
+              onEdit={handleEdit}
+              onSuccess={refetch}
             />
           ))}
         </>
