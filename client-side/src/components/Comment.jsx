@@ -1,63 +1,44 @@
 import moment from "moment"
 import { FaThumbsUp } from "react-icons/fa"
 import { useSelector } from "react-redux"
-import { useFetchUserComment } from "../hooks/useFetchUserComment"
+import { useFetchUserComment } from "../hooks/comment/useFetchUserComment"
 import { Button, Textarea } from "flowbite-react"
 import { useState } from "react"
-// import { useCreateComment } from "../hooks/useCreateComment"
 
-const Comment = ({ comment, onLike, onEdit, onSuccess }) => {
-  // const { updateComment, isEditing, setIsEditing, commentError } =
-  //   useCreateComment()
-
+const Comment = ({ comment, onLike, onEdit }) => {
   const { currentUser } = useSelector((state) => state.user)
-
   const [isEditing, setIsEditing] = useState(false)
-
   const [editedContent, setEditedContent] = useState(comment.content)
 
   // Use the custom hook to fetch user data
-  const { user, error } = useFetchUserComment(comment)
+  const { user } = useFetchUserComment(comment)
 
-  const handleEdit = async () => {
+  const handleEdit = () => {
     setIsEditing(true)
     setEditedContent(comment.content)
   }
 
-  const handleSave = async () => {
-    try {
-      const res = await fetch(`/api/comment/editComment/${comment._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content: editedContent }),
-      })
-
-      if (res.ok) {
-        // Call onEdit to update the comment in the parent state
-        onEdit(comment, editedContent)
-        setIsEditing(false) // Close the edit mode
-        onSuccess()
-      }
-    } catch (error) {
-      console.log(error)
+  const handleSave = () => {
+    if (editedContent.trim()) {
+      onEdit(comment, editedContent)
+      setIsEditing(false)
     }
   }
 
   return (
     <div className='flex p-4 border-b dark:border-gray-600 text-sm'>
+      {console.log(user)}
       <div className='flex-shrink-0 mr-3'>
         <img
           className='w-10 h-10 rounded-full bg-gray-200'
-          src={user.profilePicture}
-          alt={user.username}
+          src={user?.profilePicture}
+          alt={user?.username || "anonymous user"}
         />
       </div>
       <div className='flex-1'>
         <div className='flex items-center mb-1'>
           <span className='font-bold mr-1 text-xs truncate'>
-            {user ? `@${user.username}` : "anonymous user"}
+            {user ? `@${user?.username}` : "anonymous user"}
           </span>
           <span className='text-xs text-gray-500'>
             {moment(comment.createdAt).fromNow()}

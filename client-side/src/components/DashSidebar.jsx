@@ -5,14 +5,13 @@ import {
   HiOutlineUserGroup,
   HiUser,
 } from "react-icons/hi"
-import { useLocation, Link } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 import { useAuth } from "../context/authContext"
 import { useSelector } from "react-redux"
+import { useTabFromUrlParams } from "../hooks/useTabFromUrlParams"
 
 const DashSidebar = () => {
   const { currentUser } = useSelector((state) => state.user)
-
   const { signOutUser } = useAuth()
 
   // Use the custom hook to get the current tab
@@ -76,19 +75,3 @@ const DashSidebar = () => {
 }
 
 export default DashSidebar
-
-// Custom hook to get tab from URL
-export const useTabFromUrlParams = () => {
-  const [currentTab, setCurrentTab] = useState("")
-  const { search } = useLocation()
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(search)
-    const tabFromUrlParams = urlParams.get("tab")
-    if (tabFromUrlParams) {
-      setCurrentTab(tabFromUrlParams)
-    }
-  }, [search])
-
-  return currentTab
-}

@@ -2,9 +2,10 @@ import { Alert, Button, Textarea } from "flowbite-react"
 import { useState } from "react"
 import { useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
+import { useFetchComments } from "../hooks/comment/useFetchComments"
+import { useCreateComment } from "../hooks/comment/useCreateComment"
+import { useUpdateComment } from "../hooks/comment/useUpdateComment"
 import Comment from "./Comment"
-import { useCreateComment } from "../hooks/useCreateComment"
-import { useFetchComments } from "../hooks/useFetchComments"
 
 const CommentSection = ({ postId }) => {
   const { currentUser } = useSelector((state) => state.user)
@@ -12,23 +13,19 @@ const CommentSection = ({ postId }) => {
   const navigate = useNavigate()
 
   // Custom hooks
-  const { comments, setComments, error, likeComment, refetch } =
-    useFetchComments(postId)
+  const { comments, likeComment, refetch } = useFetchComments(postId)
   const { createComment, commentError } = useCreateComment(refetch)
+  const { updateComment } = useUpdateComment()
 
-  const handleEdit = async (comment, editedContent) => {
-    setComments(
-      comments.map((c) =>
-        c._id === comment._id ? { ...c, content: editedContent } : c
-      )
-    )
+  const handleEdit = (comment, updatedContent) => {
+    updateComment(comment, updatedContent)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     if (comment.length <= 200) {
-      createComment(comment, postId, currentUser._id)
+      createComment({ comment, postId, userId: currentUser._id })
       setComment("")
     }
   }
@@ -103,7 +100,6 @@ const CommentSection = ({ postId }) => {
               comment={comment}
               onLike={() => likeComment(comment._id, currentUser, navigate)}
               onEdit={handleEdit}
-              onSuccess={refetch}
             />
           ))}
         </>
