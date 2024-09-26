@@ -14,6 +14,7 @@ export const AppDataProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
+  // How do to it in react query but only the post data is fetched
   const fetchData = async (url, setFormData = null, isPost = true) => {
     try {
       const res = await fetch(url)

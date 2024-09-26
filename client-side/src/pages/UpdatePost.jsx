@@ -2,51 +2,41 @@ import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
-import "react-circular-progressbar/dist/styles.css"
-import { useNavigate, useParams } from "react-router-dom"
-import { CircularProgressbar } from "react-circular-progressbar"
+import { useParams } from "react-router-dom"
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react"
-import usePost from "../hooks/usePost"
+import { usePosts } from "../hooks/usePosts"
 import useUpload from "../hooks/useUpload"
-import { useData } from "../context/AppDataContext"
+import { CircularProgressbar } from "react-circular-progressbar"
+import "react-circular-progressbar/dist/styles.css"
 
 const UpdatePost = () => {
+  const { currentUser } = useSelector((state) => state.user)
   const {
     uploadImage,
     imageFileUploadError,
     imageFileUploadingProgress,
     setFile,
   } = useUpload()
-  const { fetchData } = useData()
-  const { publishError, sendPost } = usePost()
-  const navigate = useNavigate()
   const { postId } = useParams()
+  const { formData, setFormData, updatePost, publishError } =
+    usePostForm(postId)
 
-  // Ensure formData is initialized with default values
-  const [formData, setFormData] = useState({
-    title: "",
-    category: "uncategorized", // Default value
-    content: "",
-  })
+  // Update form data based on post changes (this handles it without useEffect)
+  const handleFormDataChange = (field, value) => {
+    setFormData((prevData) => ({ ...prevData, [field]: value }))
+  }
 
-  const { currentUser } = useSelector((state) => state.user)
-
-  useEffect(() => {
-    fetchData(`/api/post/getposts?postId=${postId}`, setFormData)
-  }, [postId])
-
+  // Handle image upload
   const handleUploadImage = () => {
     uploadImage(formData, setFormData)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    sendPost(
-      `/api/post/updatepost/${formData._id}/${currentUser._id}`,
-      "PUT",
-      formData,
-      navigate
-    )
+    updatePost({
+      data: formData,
+      url: `/api/post/updatepost/${postId}/${currentUser._id}`,
+    })
   }
 
   return (
@@ -60,16 +50,12 @@ const UpdatePost = () => {
             required
             id='title'
             className='flex-1'
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-            value={formData.title || ""} // Ensure value is always defined
+            onChange={(e) => handleFormDataChange("title", e.target.value)}
+            value={formData.title}
           />
           <Select
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
-            value={formData.category || "uncategorized"} // Ensure value is always defined
+            onChange={(e) => handleFormDataChange("category", e.target.value)}
+            value={formData.category}
           >
             <option value='uncategorized'>Select Category</option>
             <option value='javaScript'>JavaScript</option>
@@ -107,7 +93,7 @@ const UpdatePost = () => {
         {imageFileUploadError && (
           <Alert color='failure'>{imageFileUploadError}</Alert>
         )}
-        {formData?.image && (
+        {formData.image && (
           <img
             src={formData.image}
             alt='upload image'
@@ -116,11 +102,11 @@ const UpdatePost = () => {
         )}
         <ReactQuill
           theme='snow'
-          value={formData.content || ""} // Ensure value is always defined
+          value={formData.content}
           placeholder="What's on your mind?"
           className='h-72 mb-12'
           required
-          onChange={(value) => setFormData({ ...formData, content: value })}
+          onChange={(value) => handleFormDataChange("content", value)}
         />
         <Button type='submit' gradientDuoTone='purpleToPink'>
           Update post
@@ -136,3 +122,34 @@ const UpdatePost = () => {
 }
 
 export default UpdatePost
+
+const usePostForm = (postId) => {
+  const POST_BY_ID = `/api/post/getposts?postId=${postId}`
+
+  const {
+    post,
+    updatePost,
+    updatePostError: publishError,
+  } = usePosts(POST_BY_ID, postId)
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "uncategorized",
+    content: "",
+    image: "",
+  })
+
+  // Update formData if post changes
+  // Use useEffect to update formData when data changes
+  useEffect(() => {
+    if (post) {
+      setFormData({
+        title: post.title,
+        category: post.category,
+        content: post.content,
+        image: post.image,
+      })
+    }
+  }, [post])
+
+  return { formData, setFormData, updatePost, publishError }
+}

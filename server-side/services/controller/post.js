@@ -93,9 +93,17 @@ export const deletePost = async (req, res, next) => {
 }
 
 export const updatePost = async (req, res, next) => {
+  // console.log("received request", req.body)
+
   if (!req.user.isAdmin || req.user.id !== req.params.userId) {
     return next(errorHandler(403, "You're not allowed to update this post"))
   }
+
+  const slug = req.body.title
+    .split(" ")
+    .join("-")
+    .toLowerCase()
+    .replace(/[^a-zA-Z0-9-]/g, "")
 
   try {
     const updatePost = await Post.findByIdAndUpdate(
@@ -106,6 +114,7 @@ export const updatePost = async (req, res, next) => {
           content: req.body.content,
           category: req.body.category,
           image: req.body.image,
+          slug,
         },
       },
       { new: true }

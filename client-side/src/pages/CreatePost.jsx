@@ -1,11 +1,10 @@
 import { useState } from "react"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
-import { useNavigate } from "react-router-dom"
 import "react-circular-progressbar/dist/styles.css"
 import { CircularProgressbar } from "react-circular-progressbar"
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react"
-import usePost from "../hooks/usePost"
+import { usePosts } from "../hooks/usePosts"
 import useUpload from "../hooks/useUpload"
 
 const CreatePost = () => {
@@ -15,17 +14,18 @@ const CreatePost = () => {
     imageFileUploadingProgress,
     setFile,
   } = useUpload()
-  const { publishError, sendPost } = usePost()
-  const navigate = useNavigate()
+  // const { publishError, sendPost } = usePost()
+  const { createPost, createPostError: publishError } = usePosts()
   const [formData, setFormData] = useState({})
 
   const handleUploadImage = () => {
     uploadImage(formData, setFormData)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    sendPost("/api/post/create", "POST", formData, navigate)
+    // sendPost("/api/post/create", "POST", formData, navigate)
+    createPost(formData)
   }
 
   return (

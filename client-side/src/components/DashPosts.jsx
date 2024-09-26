@@ -1,49 +1,52 @@
 import { Table } from "flowbite-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { useData } from "../context/AppDataContext"
 import { HiOutlineExclamationCircle } from "react-icons/hi"
 import CustomModal from "./CustomModal"
+import { useInfiniteData } from "../hooks/useInfinite"
+import { nextPostPage } from "../api/post"
+import { useDeleteData } from "../hooks/useDeleteData"
 
 const DashPosts = () => {
   const { currentUser } = useSelector((state) => state.user)
   const [idToDelete, setIdToDelete] = useState(null)
-  const {
-    showMorePosts,
-    data,
-    fetchData,
-    showMoreData,
-    showModal,
-    setShowModal,
-    deleteData,
-  } = useData()
+  const [showModal, setShowModal] = useState(false)
 
-  useEffect(() => {
-    if (currentUser?.isAdmin) {
-      fetchData(`/api/post/getposts?userId=${currentUser._id}`)
-    }
-  }, [currentUser._id])
-
-  const handleShowMore = () => {
-    const startIndex = data.length
-
-    showMoreData(
-      `api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`,
-      true
+  const API_POST_BY_USER_ID = `/api/post/getposts?userId=${currentUser._id}&startIndex=`
+  const API_DELETE_POST_BY_USER_ID = `/api/post/deleteposts/${idToDelete}/${currentUser._id}`
+  const queryKey = ["posts", currentUser._id]
+  // Infinite query for posts
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteData(
+      queryKey,
+      API_POST_BY_USER_ID,
+      currentUser._id,
+      nextPostPage
     )
-  }
+
+  const { deletePost } = useDeleteData(queryKey)
+
+  // Flatten pages into a single list of posts
+  const allPosts = data?.pages.flatMap((page) => page.posts) || []
 
   const handleDeletePost = () => {
-    deleteData(
-      `/api/post/deleteposts/${idToDelete}/${currentUser._id}`,
-      idToDelete
-    )
+    if (idToDelete) {
+      deletePost(API_DELETE_POST_BY_USER_ID)
+      setShowModal(false)
+      setIdToDelete(null)
+    }
+  }
+
+  const handleShowMore = () => {
+    if (hasNextPage) {
+      fetchNextPage()
+    }
   }
 
   return (
     <div className='table-auto w-full overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {currentUser.isAdmin && data.length > 0 ? (
+      {currentUser?.isAdmin && allPosts.length > 0 ? (
         <>
           <Table hoverable className='shadow-md'>
             <Table.Head>
@@ -56,7 +59,7 @@ const DashPosts = () => {
                 <span>Edit</span>
               </Table.HeadCell>
             </Table.Head>
-            {data.map((post) => (
+            {allPosts.map((post) => (
               <Table.Body className='divide-y' key={post._id}>
                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                   <Table.Cell>
@@ -105,17 +108,17 @@ const DashPosts = () => {
               </Table.Body>
             ))}
           </Table>
-          {showMorePosts && (
+          {hasNextPage && (
             <button
               onClick={handleShowMore}
               className='w-full text-teal-500 text-sm self-center py-7'
             >
-              Show More
+              {isFetchingNextPage ? "Loading more..." : "Show More"}
             </button>
           )}
         </>
       ) : (
-        <p>There is no posts yet!</p>
+        <p>There are no posts yet!</p>
       )}
       <CustomModal
         showModal={showModal}

@@ -2,23 +2,38 @@ import { Alert, Button, Textarea } from "flowbite-react"
 import { useState } from "react"
 import { useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
-import { useFetchComments } from "../hooks/comment/useFetchComments"
-import { useCreateComment } from "../hooks/comment/useCreateComment"
-import { useUpdateComment } from "../hooks/comment/useUpdateComment"
+import { useComments } from "../hooks/comment/useComments"
+import CustomModal from "./CustomModal"
 import Comment from "./Comment"
+import { HiOutlineExclamationCircle } from "react-icons/hi"
 
 const CommentSection = ({ postId }) => {
   const { currentUser } = useSelector((state) => state.user)
+  const [showModal, setShowModal] = useState(false)
   const [comment, setComment] = useState("")
+  const [commentToDelete, setCommentToDelete] = useState()
   const navigate = useNavigate()
 
-  // Custom hooks
-  const { comments, likeComment, refetch } = useFetchComments(postId)
-  const { createComment, commentError } = useCreateComment(refetch)
-  const { updateComment } = useUpdateComment()
+  const {
+    comments,
+    createComment,
+    commentError,
+    deleteComment,
+    updateComment,
+    likeComment,
+  } = useComments(postId)
 
-  const handleEdit = (comment, updatedContent) => {
-    updateComment(comment, updatedContent)
+  const handleEdit = (commentId, updatedContent) => {
+    updateComment({ commentId, updatedContent })
+  }
+
+  const handleDelete = (commentId) => {
+    if (!currentUser) {
+      navigate("/login")
+      return
+    }
+    deleteComment(commentId)
+    setShowModal(false)
   }
 
   const handleSubmit = (e) => {
@@ -98,12 +113,28 @@ const CommentSection = ({ postId }) => {
             <Comment
               key={comment._id}
               comment={comment}
-              onLike={() => likeComment(comment._id, currentUser, navigate)}
+              onLike={likeComment}
               onEdit={handleEdit}
+              onDelete={(commentId) => {
+                setShowModal(true)
+                setCommentToDelete(commentId)
+              }}
             />
           ))}
         </>
       )}
+      <CustomModal
+        showModal={showModal}
+        onClose={() => setShowModal(false)}
+        icon={
+          <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+        }
+        title='Are you sure you want to delete your comment?'
+        description='This action is irreversible and all your comment will be deleted.'
+        confirmText="Yes, I'm sure"
+        cancelText='No, cancel'
+        onClick={() => handleDelete(commentToDelete)}
+      />
     </div>
   )
 }

@@ -4,14 +4,17 @@ import { useSelector } from "react-redux"
 import { useFetchUserComment } from "../hooks/comment/useFetchUserComment"
 import { Button, Textarea } from "flowbite-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
   const { currentUser } = useSelector((state) => state.user)
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState(comment.content)
+  const navigate = useNavigate()
 
   // Use the custom hook to fetch user data
-  const { user } = useFetchUserComment(comment)
+  const { data: user = null } = useFetchUserComment(comment)
+
 
   const handleEdit = () => {
     setIsEditing(true)
@@ -20,14 +23,21 @@ const Comment = ({ comment, onLike, onEdit }) => {
 
   const handleSave = () => {
     if (editedContent.trim()) {
-      onEdit(comment, editedContent)
+      onEdit(comment._id, editedContent)
       setIsEditing(false)
     }
   }
 
+  const handleLike = (commentId) => {
+    if (!currentUser) {
+      navigate("/login") // Redirect to login if the user isn't logged in
+      return
+    }
+    onLike(commentId)
+  }
+
   return (
     <div className='flex p-4 border-b dark:border-gray-600 text-sm'>
-      {console.log(user)}
       <div className='flex-shrink-0 mr-3'>
         <img
           className='w-10 h-10 rounded-full bg-gray-200'
@@ -77,7 +87,7 @@ const Comment = ({ comment, onLike, onEdit }) => {
             <div className='flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2'>
               <button
                 type='button'
-                onClick={() => onLike(comment._id)}
+                onClick={() => handleLike(comment._id)}
                 className={`text-gray-400 hover:text-blue-500 ${
                   currentUser &&
                   comment.likes.includes(currentUser._id) &&
@@ -94,13 +104,22 @@ const Comment = ({ comment, onLike, onEdit }) => {
               </p>
               {currentUser &&
                 (currentUser._id === comment.userId || currentUser.isAdmin) && (
-                  <button
-                    type='submit'
-                    className='text-gray-400 hover:text-blue-500'
-                    onClick={handleEdit}
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      type='submit'
+                      className='text-gray-400 hover:text-blue-500'
+                      onClick={handleEdit}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type='submit'
+                      className='text-gray-400 hover:text-red-500'
+                      onClick={() => onDelete(comment._id)}
+                    >
+                      Delete
+                    </button>
+                  </>
                 )}
             </div>
           </>
