@@ -52,7 +52,10 @@ const PostPage = () => {
       <div className='flex flex-col justify-center items-center mb-5'>
         <h1 className='text-xl mt-5'>Recent Articles</h1>
         <div className='flex flex-col md:flex-row gap-5 mt-5 justify-center'>
-          <PostCard url={`/api/post/getposts?limit=3`} />
+          <PostCard
+            url={`/api/post/getposts?limit=3`}
+            queryKey={["recentPost"]}
+          />
         </div>
       </div>
     </main>

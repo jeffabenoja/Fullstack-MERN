@@ -2,9 +2,9 @@ import { fetchPosts } from "../api/post"
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 
-const PostCard = ({ url }) => {
+const PostCard = ({ url, queryKey }) => {
   const { data } = useQuery({
-    queryKey: ["recentPost"],
+    queryKey: queryKey,
     queryFn: () => fetchPosts(url),
     select: (data) => data.posts,
   })
@@ -15,7 +15,7 @@ const PostCard = ({ url }) => {
         data.map((post) => (
           <div
             key={post._id}
-            className='group relative w-full border border-teal-500 hover:border-2 h-[400px] overflow-hidden rounded-lg sm:w-[430px] transition-all'
+            className='group relative w-full border border-teal-500 hover:border-2 h-[400px] overflow-hidden rounded-lg sm:!w-[360px] transition-all'
           >
             <Link to={`/post/${post.slug}`}>
               <img

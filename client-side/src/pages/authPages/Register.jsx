@@ -28,32 +28,6 @@ const Register = () => {
     registerUser(formData, setError, setLoading, navigate)
 
     setFormData({})
-
-    // if (!formData.username || !formData.email || !formData.password) {
-    //   return setError(`Please fill out all fields!`)
-    // }
-
-    // try {
-    //   setLoading(true)
-    //   setError(null)
-    //   const res = await fetch(`/api/auth/register`, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(formData),
-    //   })
-
-    //   const data = await res.json()
-    //   if (data.success === false) {
-    //     return setError(data.message)
-    //   }
-    //   setLoading(false)
-    //   if (res.ok) {
-    //     navigate("/login")
-    //   }
-    // } catch (error) {
-    //   setError(error.message)
-    //   setLoading(false)
-    // }
   }
 
   return (
