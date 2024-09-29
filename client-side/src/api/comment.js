@@ -16,7 +16,7 @@ export const createComment = async ({ comment, postId, userId }) => {
 }
 
 export const fetchComments = async (postId) => {
-  const res = await fetch(`/api/comment/getComments/${postId}`)
+  const res = await fetch(`/api/comment/getPostComments/${postId}`)
   if (!res.ok) {
     throw new Error("Failed to load comments")
   }

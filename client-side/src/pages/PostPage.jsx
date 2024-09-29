@@ -3,11 +3,11 @@ import { Button, Spinner } from "flowbite-react"
 import CallToAction from "../components/callToAction"
 import CommentSection from "../components/CommentSection"
 import { usePosts } from "../hooks/usePosts"
+import PostCard from "../components/PostCard"
 
 const PostPage = () => {
-  // const { fetchData, error, loading } = useData()
-  // const [formData, setFormData] = useState({})
   const { postSlug } = useParams()
+
   const POST_BY_SLUG = `/api/post/getposts?slug=${postSlug}`
   const { post, isLoading: loading } = usePosts(POST_BY_SLUG, postSlug)
 
@@ -49,6 +49,12 @@ const PostPage = () => {
         <CallToAction />
       </div>
       <CommentSection postId={post?._id} />
+      <div className='flex flex-col justify-center items-center mb-5'>
+        <h1 className='text-xl mt-5'>Recent Articles</h1>
+        <div className='flex flex-col md:flex-row gap-5 mt-5 justify-center'>
+          <PostCard url={`/api/post/getposts?limit=3`} />
+        </div>
+      </div>
     </main>
   )
 }

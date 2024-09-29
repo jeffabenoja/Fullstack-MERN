@@ -8,8 +8,6 @@ export const useDeleteData = (queryKey) => {
     onSuccess: () => {
       // Invalidate the posts query to refetch the latest data
       queryClient.invalidateQueries(queryKey)
-
-      console.log("Deleted successfully")
     },
 
     onError: (error) => {
