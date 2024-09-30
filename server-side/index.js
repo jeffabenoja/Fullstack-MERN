@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.js"
 import postRoute from "./routes/post.js"
 import commentRoute from "./routes/comment.js"
 import cookieParser from "cookie-parser"
+import path from "path"
 
 // Load the environment variables into the application
 dotenv.config() // This loads the environment variables from the .env file into process.env
@@ -21,6 +22,9 @@ mongoose
     // If the connection fails, the error is logged
     console.log(error)
   })
+
+// Middleware to parse incoming JSON requests
+const __dirname = path.resolve()
 
 // Creating an instance of the express application
 const app = express()
@@ -46,8 +50,15 @@ app.use(`/api/auth`, authRoutes)
 app.use("/api/post", postRoute)
 
 // Using comment route for handling request to '/api/comment' endpoint
-app.use('/api/comment', commentRoute)
+app.use("/api/comment", commentRoute)
 
+// Middleware to serve static files from the 'client-side/dist' folder
+app.use(express.static(path.join(__dirname, "/client-side/dist")))
+
+// Middleware to serve index.html for all other routes
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client-side", "dist", "index.html"))
+})
 
 // Middleware to handle errors. If any route or middleware throws an error, it will be caught here.
 // `err` is the error object, and the middleware will send a structured JSON response with error details.
