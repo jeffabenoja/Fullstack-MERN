@@ -9,14 +9,15 @@ import {
 import { Link } from "react-router-dom"
 import { useAuth } from "../context/authContext"
 import { useSelector } from "react-redux"
-import { useTabFromUrlParams } from "../hooks/useTabFromUrlParams"
+import { useFromUrlParams } from "../hooks/useFromUrlParams"
 
 const DashSidebar = () => {
   const { currentUser } = useSelector((state) => state.user)
   const { signOutUser } = useAuth()
 
   // Use the custom hook to get the current tab
-  const tab = useTabFromUrlParams()
+  const { searchTerm } = useFromUrlParams("tab")
+  const tab = searchTerm
 
   const handleSignOut = () => {
     signOutUser()
