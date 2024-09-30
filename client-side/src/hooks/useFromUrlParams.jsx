@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 
-
-export const useTabFromUrlParams = () => {
-  const [currentTab, setCurrentTab] = useState("")
+export const useFromUrlParams = (params) => {
+  const [searchTerm, setSearchTerm] = useState("")
   const { search } = useLocation()
 
   useEffect(() => {
     const urlParams = new URLSearchParams(search)
-    const tabFromUrlParams = urlParams.get("tab")
+    const tabFromUrlParams = urlParams.get(params) || ""
     if (tabFromUrlParams) {
-      setCurrentTab(tabFromUrlParams)
+      setSearchTerm(tabFromUrlParams)
     }
   }, [search])
 
-  return currentTab
+  return { searchTerm, setSearchTerm }
 }

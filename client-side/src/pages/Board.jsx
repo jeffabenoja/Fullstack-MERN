@@ -1,4 +1,4 @@
-import { useTabFromUrlParams } from "../hooks/useTabFromUrlParams"
+import { useFromUrlParams } from "../hooks/useFromUrlParams"
 import DashSidebar from "../components/DashSidebar"
 import DashProfile from "../components/DashProfile"
 import DashPosts from "../components/DashPosts"
@@ -7,7 +7,8 @@ import DashBoard from "../components/DashBoard"
 
 const Board = () => {
   // Use the custom hook to get the current tab
-  const tab = useTabFromUrlParams()
+  const { searchTerm } = useFromUrlParams("tab")
+  const tab = searchTerm
 
   return (
     <div className='min-h-screen flex flex-col md:flex-row'>
